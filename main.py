@@ -8,6 +8,15 @@ def trefoil_knot(t):
     z = -np.sin(3 * t)
     return np.stack([x, y, z], axis=-1)
 
+def lissajous_knot(fx, fy, fz, px, py, pz):
+    def position(t):
+        t = t * 2 * np.pi
+        x = np.cos(fx * t + px * 2 * np.pi)
+        y = np.cos(fy * t + py * 2 * np.pi)
+        z = np.cos(fz * t + pz * 2 * np.pi)
+        return np.stack([x, y, z], axis=-1)
+    return position
+
 def elliptical_profile(rx, ry, n):
     a = np.linspace(0, 2 * np.pi, n, False)
     x = np.cos(a) * rx
@@ -65,9 +74,10 @@ def write_binary_stl(path, points):
 
 def main():
     curve = trefoil_knot
-    profile = elliptical_profile(0.25, 0.5, 360)
-    # profile = rectangular_profile(0.25, 0.5)
-    points = mesh(curve, profile, 512)
+    # curve = lissajous_knot(3, 4, 5, 0.55, 0.15, 0)
+    profile = elliptical_profile(0.125, 0.125, 360)
+    # profile = rectangular_profile(0.125, 0.125)
+    points = mesh(curve, profile, 1024)
     write_binary_stl('out.stl', points)
 
 if __name__ == '__main__':
