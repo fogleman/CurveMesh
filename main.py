@@ -39,6 +39,13 @@ def elliptical_profile(rx, ry, n):
 def rectangular_profile(rx, ry):
     return np.array([(-rx, -ry), (rx, -ry), (rx, ry), (-rx, ry)])
 
+def wavy_profile(radius, amplitude, frequency, n):
+    a = np.linspace(0, 2 * np.pi, n, False)
+    r = np.sin(a * frequency) * amplitude + radius
+    x = np.cos(a) * r
+    y = np.sin(a) * r
+    return np.stack([x, y], axis=-1)
+
 # mesh generation
 
 def mesh(curve, profile, n):
@@ -102,8 +109,9 @@ def main():
     curve = trefoil_knot
     # curve = spiral(3, 3)
     # curve = lissajous_knot(3, 4, 5, 0.55, 0.15, 0)
-    profile = elliptical_profile(0.125, 0.125, 360)
+    profile = elliptical_profile(0.25, 0.125, 360)
     # profile = rectangular_profile(0.125, 0.125)
+    # profile = wavy_profile(0.25, 0.25 / 8, 8, 360)
     points = mesh(curve, profile, 1024)
     write_binary_stl('out.stl', points)
 
